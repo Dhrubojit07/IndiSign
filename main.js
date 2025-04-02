@@ -1,19 +1,5 @@
-/* 
-Main.js manages the training, classification, and output of sign language gestures. 
 
-- The Main class is responsible for altering page elements on the user interface such as buttons,
-video elements, etc. It is also handles the training, prediction, and video call features.
-- The PredictionOutput class converts the predicted text passed by Main into text, image, and audio
-output. This class is also responsible for turning a caller's words into speech in video call mode.
 
-Credits:
-The kNN Classifier used for this project was created by Google TensorFlow. 
-The kNN classifier requires the computation of random numbers that is not readily available on JavaScript.
-To accomplish this, the work of Johannes Baagøe on "implementations of Randomness in Javascript" was used.
-Additionally, usage of TensorFlow was learned from Abishek Singh's "alexa-sign-language-translator".
-
-*/
-import { saveModelData, loadModelData, saveGestureNames, loadGestureNames } from './modelStorage.js';
 // Importing the k-Nearest Neighbors Algorithm
 import {
   KNNImageClassifier
@@ -31,75 +17,11 @@ const confidenceThreshold = 0.98
 // The start gesture is for signalling when to start prediction
 // The stop gesture is for signalling when to stop prediction
 var words = ["start", "stop"];
-loadGestureNames(); // Load gesture names from LocalStorage
 
 /*
 The Main class is responsible for the training and prediction of words.
 It controls the webcam, user interface, as well as initiates the output of predicted words.
 */
-
-// Helper function to save training data to LocalStorage
-// Helper function to save training data to LocalStorage
-function saveTrainingData(gestureIndex, image) {
-  console.log('Saving training data for gesture:', gestureIndex); // Debug log
-  const canvas = document.createElement('canvas');
-  canvas.width = image.width;
-  canvas.height = image.height;
-  const ctx = canvas.getContext('2d');
-  ctx.drawImage(image, 0, 0);
-  const base64Image = canvas.toDataURL('image/png');
-
-  const trainingData = JSON.parse(localStorage.getItem('trainingData')) || {};
-  if (!trainingData[gestureIndex]) {
-    trainingData[gestureIndex] = [];
-  }
-  trainingData[gestureIndex].push(base64Image);
-  localStorage.setItem('trainingData', JSON.stringify(trainingData));
-
-  console.log('Training data saved:', trainingData); // Debug log
-}
-
-// Helper function to load training data from LocalStorage
-function loadTrainingData(knn) {
-  console.log('Loading training data from LocalStorage'); // Debug log
-  const trainingData = JSON.parse(localStorage.getItem('trainingData')) || {};
-  console.log('Training data loaded:', trainingData); // Debug log
-
-  for (const gestureIndex in trainingData) {
-    const images = trainingData[gestureIndex];
-    images.forEach((base64Image) => {
-      const img = new Image();
-      img.src = base64Image;
-      img.onload = () => {
-        const imageTensor = dl.fromPixels(img);
-        knn.addImage(imageTensor, parseInt(gestureIndex));
-      };
-    });
-  }
-}
-
-
-
-
-// Helper function to load training data from LocalStorage
-function loadTrainingData(knn) {
-  const trainingData = JSON.parse(localStorage.getItem('trainingData')) || {};
-  for (const gestureIndex in trainingData) {
-    const images = trainingData[gestureIndex];
-    images.forEach((base64Image) => {
-      const img = new Image();
-      img.src = base64Image;
-      img.onload = () => {
-        const imageTensor = dl.fromPixels(img);
-        knn.addImage(imageTensor, parseInt(gestureIndex));
-      };
-    });
-  }
-}
-
-// Helper function to create and display gesture cards
-
-
 class Main {
   constructor() {
     // Initialize variables for display as well as prediction purposes
@@ -176,33 +98,44 @@ class Main {
   /*This function starts the webcam and initial training process. It also loads the kNN
   classifier*/
   initializeTranslator() {
-    // Load gesture names from LocalStorage
-    words = loadGestureNames();
-  
     this.startWebcam();
     this.initialTraining();
     this.loadKNN();
-  
-    // Load training data from LocalStorage
-    loadTrainingData(this.knn);
   }
 
   //This function sets up the webcam
   startWebcam() {
     navigator.mediaDevices.getUserMedia({
-        video: {
-          facingMode: 'user'
-        },
+        video: { facingMode: 'user' },
         audio: false
-      })
-      .then((stream) => {
+    }).then((stream) => {
         this.video.srcObject = stream;
         this.video.width = IMAGE_SIZE;
         this.video.height = IMAGE_SIZE;
         this.video.addEventListener('playing', () => this.videoPlaying = true);
         this.video.addEventListener('paused', () => this.videoPlaying = false);
-      })
-  }
+    }).catch((error) => {
+        console.error("Webcam access error:", error);
+        this.setStatusText("Webcam access denied. Please allow camera permissions.");
+    });
+
+    // Ensure webcam restarts when page is focused again
+    document.addEventListener("visibilitychange", () => {
+        if (!document.hidden) {
+            console.log("Page is active again, restarting webcam...");
+            this.startWebcam();
+        }
+    });
+
+    // Ensure webcam reinitializes after sleep mode
+    window.addEventListener("focus", () => {
+        console.log("Window regained focus, checking webcam status...");
+        if (!this.videoPlaying) {
+            this.startWebcam();
+        }
+    });
+}
+
 
   /*This function initializes the training for Start and Stop Gestures. It also 
   sets a click listener for the next button.*/
@@ -240,9 +173,9 @@ class Main {
   //This function loads the kNN classifier
   loadKNN() {
     this.knn = new KNNImageClassifier(words.length, TOPK);
-  
-    // Load the model data from LocalStorage
-    loadModelData(this.knn);
+
+    // Load knn model
+    this.knn.load().then(() => this.initializeTraining());
   }
 
   /*This creates the training and clear buttons for the initial Start and Stop gesture. 
@@ -316,24 +249,33 @@ class Main {
       this.trainedCardsHolder.style.display = "block";
 
       // Add Gesture on Submission of new gesture form
-      addWordForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const word = this.newWordInput.value.trim();
+      this.addWordForm.addEventListener('submit', (e) => {
+        this.trainingCommands.innerHTML = "";
+
+        e.preventDefault(); // preventing default submission action
+        var word = this.newWordInput.value.trim(); // returns new word without whitespace
+
+        // if a new word is entered, add it to the gesture classes and start training
         if (word && !words.includes(word)) {
+          //Add word to words array
           words.push(word);
-      
-          // Save the updated gesture names
-          saveGestureNames(words);
-      
+
+          // Create train and clear buttons for new gesture and set reset form
           this.createTrainingBtns(words.indexOf(word));
           this.newWordInput.value = '';
+
+          // Increase the amount of classes and array length in the kNN model
           this.knn.numClasses += 1;
           this.knn.classLogitsMatrices.push(null);
           this.knn.classExampleCount.push(0);
+
+          // Start training the word and create the translate button
+          this.initializeTraining();
           this.createTranslateBtn();
         } else {
-          alert('Duplicate word or no word entered');
+          alert("Duplicate word or no word entered");
         }
+        return;
       });
     } else {
       alert('You haven\'t added any examples yet.\n\nAdd a Gesture, then perform the sign in front of the webcam.');
@@ -457,30 +399,35 @@ class Main {
 
   // This function adds examples for the gesture to the kNN model
   train(gestureIndex) {
+    console.log(this.videoPlaying);
     if (this.videoPlaying) {
-      console.log('Training gesture:', gestureIndex); // Debug log
+      console.log("entered training");
+      // Get image data from video element
       const image = dl.fromPixels(this.video);
-  
-      // Add the image to the knn model
+
+      // Add current image to classifier
       this.knn.addImage(image, gestureIndex);
-  
-      // Save the image to LocalStorage
-      saveTrainingData(gestureIndex, this.video);
-  
-      // Update the UI
+
+      // Get example count
       const exampleCount = this.knn.getClassExampleCount()[gestureIndex];
+
       if (exampleCount > 0) {
+        //if example count for this particular gesture is more than 0, update it
         this.exampleCountDisplay[gestureIndex].innerText = ' ' + exampleCount + ' examples';
+
+        //if example count for this particular gesture is 1, add a capture of the gesture to gesture cards
         if (exampleCount == 1 && this.gestureCards[gestureIndex].childNodes[1] == null) {
-          const gestureImg = document.createElement('canvas');
-          gestureImg.className = 'trained_image';
-          gestureImg.getContext('2d').drawImage(this.video, 0, 0, 400, 180);
+          var gestureImg = document.createElement("canvas");
+          gestureImg.className = "trained_image";
+          gestureImg.getContext('2d').drawImage(video, 0, 0, 400, 180);
           this.gestureCards[gestureIndex].appendChild(gestureImg);
         }
+
+        // if 30 examples are trained, show check mark to the user 
         if (exampleCount == 30) {
-          this.checkMarks[gestureIndex].src = 'Images/checkmark.svg';
-          this.checkMarks[gestureIndex].classList.add('animated');
-          this.checkMarks[gestureIndex].classList.add('rotateIn');
+          this.checkMarks[gestureIndex].src = "Images//checkmark.svg";
+          this.checkMarks[gestureIndex].classList.add("animated");
+          this.checkMarks[gestureIndex].classList.add("rotateIn");
         }
       }
     }

@@ -3,13 +3,8 @@
   "version": "0.0.1",
   "license": "do what you want but try to give back",
   "dependencies": {
-    "@tensorflow/tfjs": "^4.22.0",
-    "@tensorflow/tfjs-node": "^4.22.0",
     "deeplearn": "~0.5.0",
     "deeplearn-knn-image-classifier": "^0.3.0",
-    "express": "^4.21.2",
-    "mongoose": "^8.11.0",
-    "multer": "^1.4.5-lts.1",
     "pre-commit": "^1.2.2"
   },
   "scripts": {

@@ -1,12 +1,7 @@
-/*
-Style Sheet for American Sign Language Translator. This file is responsible for the aesthetics of the Translator
-
-Author: Sufiyaan Nadeem
-*/
 
 body {
   font-family: "Google Sans", "sans-serif";
-  margin: 0;
+  margin-top: 0px;
   padding: 0;
 }
 
@@ -32,94 +27,149 @@ body::-webkit-scrollbar-thumb:hover {
   width: 100%;
   height: 100%;
   position: absolute;
-  background-color: white;
+  background: linear-gradient(135deg, #8b5f60, #fad0c4); /* Gradient background */
   z-index: 10;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  
 }
+
+
 
 #welcomeScreen {
   text-align: center;
   position: fixed;
   top: 50%;
   left: 50%;
-  /* bring your own prefixes */
   transform: translate(-50%, -50%);
-  /*border: 15px solid orange;*/
   font-family: "Google Sans", "sans-serif";
+  background: rgba(255, 255, 255, 0.9); /* Semi-transparent white background */
+  padding: 40px;
+  border-radius: 15px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Soft shadow */
 }
 
 #welcomeScreen h1 {
   font-size: 50px;
   font-weight: 500;
-  color: black;
+  color: #333; /* Darker text for better contrast */
   overflow: hidden;
-  border-right: .06em solid #4d4d4d;
+  border-right: .06em solid #ff6f61; /* Vibrant cursor color */
   white-space: nowrap;
-  /*border: 1px solid orange;*/
-  font-family: "Google Sans", "sans-serif";
   margin: 0px;
-  animation: typing 2s steps(30, end), blink-caret .5s step-end infinite;
+  animation: typing 2s steps(30, end), blink-caret .5s step-end infinite, colorChange 3s infinite alternate; /* Added color change animation */
 }
 
-/* The typing effect */
+@keyframes colorChange {
+  0% {
+    color: #333;
+  }
+  100% {
+    color: #ff6f61; /* Vibrant coral color */
+  }
+}
 
 @keyframes typing {
   from {
-    width: 0
+    width: 0;
   }
   to {
-    width: 100%
+    width: 100%;
   }
 }
 
-/* The typewriter cursor effect */
-
 @keyframes blink-caret {
   from, to {
-    border-color: transparent
+    border-color: transparent;
   }
   50% {
-    border-color: #4d4d4d
+    border-color: #ff6f61; /* Vibrant cursor color */
   }
 }
 
 #welcomeScreen h3 {
   padding-top: 10px;
   margin: 0px;
-  color: #4d4d4d;
+  color: #555; /* Slightly darker gray for better readability */
   font-size: 30px;
   font-style: italic;
-  /*border: 1px solid orange;*/
   font-weight: 500;
+  
+}
+body {
+  background-image: url('010bcaef9dc43776a940ff32b573f929.jpg');
+   background-size: 100%;
+  background-position: right;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  margin-top: 0px;
+ 
 }
 
+/* Video Styling */
 #video {
+  
   transform: rotateY(180deg);
   -webkit-transform: rotateY(180deg);
   -moz-transform: rotateY(180deg);
   background-color: black;
-  transition: 1s;
+  transition: transform 1s ease, box-shadow 1s ease;
+  border-radius: 10px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+#video:hover {
+  transform: rotateY(180deg) scale(1.05);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.5);
 }
 
 #videoHolder {
-  background-color: black;
-  border: 8px solid black;
+  background-color: rgb(249, 249, 249);
+  /* border: 8px solid black; */
   display: inline-block;
-  border-radius: 5px;
-  vertical-align: middle;
-  transition: 1s;
+  border-radius: 2px;
+  vertical-align:top;
+  transition: transform 1s ease, box-shadow 1s ease;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 }
 
-.videoContainerTrain {
+#videoHolder:hover {
+  transform: scale(1.02);
+  box-shadow: 0 12px 24px rgba(255, 255, 255, 0.5);
+}
+
+/* Video Container Styling */
+/* .videoContainerTrain, */
+.videoContainerPredict {
+ 
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  transition: transform 1s ease, box-shadow 1s ease;
+  
+}
+
+/* .videoContainerTrain:hover, */
+.videoContainerPredict:hover {
+  transform: scale(1.02);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.5);
+}
+
+/* .videoContainerTrain {
   height: 320px;
   width: 550px;
   margin-top: 0px;
-}
+} */
 
 .videoContainerPredict {
   width: 650px;
   height: 370px;
   margin-top: -35px;
+}
+
+.videoTrain,
+.videoPredict {
+  border-radius: 10px;
+  overflow: hidden;
 }
 
 .videoTrain {
@@ -132,6 +182,7 @@ body::-webkit-scrollbar-thumb:hover {
   width: 500px;
 }
 
+/* Video Call Styling */
 #videoCall {
   display: none;
   width: 650px;
@@ -139,53 +190,67 @@ body::-webkit-scrollbar-thumb:hover {
   border: none;
   overflow: hidden;
   left: 2.5%;
+  border-radius: 15px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 }
 
+/* Typography Styling */
 h5 {
   font-size: 30px;
   font-weight: 300;
   margin: 0px;
   height: 40px;
+  color: #0a0a0a;
+  text-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 }
 
 h7 {
   font-size: 20px;
   margin: 0px;
-  /*border: 1px solid orange;*/
   font-weight: 300;
   font-style: italic;
-  font-family: 'Product Sans';
+  font-family: 'Product Sans', sans-serif;
+  color: #111111;
+  text-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 }
 
+/* Button Styling */
 button {
-  text-align: center;
-  /* bring your own prefixes */
-  font-family: "Google Sans", "sans-serif";
-  background-color: #000000;
+  font-family: "Google Sans", sans-serif;
+  background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
   color: white;
   font-size: 25px;
-  padding: 8px 25px;
+  padding: 10px 20px;
   font-weight: 200;
   cursor: pointer;
   text-decoration: none;
   border: none;
   border-radius: 10px;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-  transition: .3s;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+}
+
+button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  background: linear-gradient(135deg, #2575fc 0%, #6a11cb 100%);
 }
 
 button:active {
-  box-shadow: none;
+  transform: translateY(0);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
+/* Specific Button Styling */
 #checkmark_startButton {
   padding-bottom: 5px;
+  /* margin-top: 10px; */
 }
 
 #checkmark_stopButton {
   display: block;
   margin: 0 auto;
-  margin-top: 5px;
+  /* margin-top: 20px; */
 }
 
 #proceedButton {
@@ -194,15 +259,56 @@ button:active {
   left: 50%;
   position: fixed;
   display: none;
+  background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
 }
 
+#proceedButton:hover {
+  background: linear-gradient(135deg, #ff4b2b 0%, #ff416c 100%);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Apply Animations */
+.videoContainerTrain,
+.videoContainerPredict,
+button {
+  animation: fadeIn 1s ease-in-out;
+}
+
+h5, h7 {
+  animation: slideIn 0.8s ease-in-out;
+}
+
+
+
+
+/* next from here */
 #startButton {
   display: block;
-  margin: 0 auto;
+  margin: 10px auto;
 }
 
 #stopButton {
-  margin: 0 auto;
+  margin: 10px auto;
   margin-top: 50px;
   display: block;
 }
@@ -212,7 +318,7 @@ button:active {
   font-size: 18px;
   color: black;
   background-color: #cc0000;
-  margin: 0 auto;
+  margin-top: 30px;
 }
 
 .trainBtn {
@@ -231,14 +337,14 @@ button:active {
 }
 
 #nextButton {
-  top: 30%;
+  bottom: 30%;
   right: 2.5%;
   z-index: 2;
   position: fixed;
 }
 
 #predictButton {
-  top: 30%;
+  bottom: 30%;
   right: 2.5%;
   z-index: 2;
   position: fixed;
@@ -246,7 +352,7 @@ button:active {
 }
 
 #backButton {
-  top: 30%;
+  bottom: 30%;
   left: 2.5%;
   z-index: 2;
   position: fixed;
@@ -254,7 +360,7 @@ button:active {
 }
 
 .videoCallBtn {
-  top: 30%;
+  bottom: 30%;
   right: 2.5%;
   z-index: 2;
   position: fixed;
@@ -289,7 +395,7 @@ button:active {
   height: 350px;
   display: inline-block;
   z-index: 1;
-  margin-top: 200px;
+  margin-top: 10px;
   left: 50%;
   text-align: center;
   border-bottom-left-radius: 10px;
@@ -325,7 +431,7 @@ button:active {
 #titleBar {
   text-align: center;
   position: fixed;
-  top: 0%;
+  bottom: 0%;
   left: 50%;
   width: 100%;
   /* bring your own prefixes */
@@ -339,7 +445,7 @@ button:active {
 }
 
 #titleBar h1 {
-  font-size: 50px;
+  font-size: 20px;
   font-weight: 500;
   color: black;
   /*overflow: hidden;*/
@@ -349,13 +455,13 @@ button:active {
   margin: 0px;
   display: inline-block;
   animation: typing 2s steps(30, end), blink-caret .5s step-end infinite;
-  margin-top: 20px;
+  margin-top: 10px;
 }
 
 #titleBar h3 {
-  padding-top: 20px;
+  padding-top: 10px;
   margin-top: 0px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   color: #4d4d4d;
   font-size: 22px;
   /*border: 1px solid orange;*/
@@ -366,7 +472,7 @@ button:active {
   float: left;
   width: 215px;
   height: 200px;
-  margin: 17px;
+  margin: 7px;
   background-color: white;
   color: black;
   text-align: center;
@@ -387,7 +493,7 @@ button:active {
   width: 315px;
   height: 180px;
   margin-left: 100px;
-  background-color: black;
+  background-color: rgb(255, 255, 255);
   color: white;
   text-align: center;
   cursor: pointer;
@@ -412,8 +518,9 @@ button:active {
   border-radius: 10px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   padding: 10px;
+  margin-bottom:5px ;
   display: none;
-  margin-top: 30px;
+  margin-top: 5px;
 }
 
 #translationHolder h3 {
@@ -422,13 +529,13 @@ button:active {
 }
 
 #trainingCommands {
-  margin-top: 25px;
+  margin-top:10 px;
 }
 
 img.plus_sign {
   height: 80px;
   display: block;
-  padding: 15px;
+  padding: 10px;
   margin: 0 auto;
   /*border: 1px solid orange;*/
 }
@@ -480,4 +587,117 @@ label {
   margin-top: 1px;
   border-radius: 3px;
   vertical-align: middle;
+}
+
+/* Media Query for Tablet Devices */
+@media (max-width: 1024px) {
+  #titleBar {
+      flex-direction: column;
+      text-align: center;
+  }
+
+  #translatorWindow {
+      flex-direction: column;
+      justify-content: center;
+  }
+
+  #videoHolder, #trainingHolder, #translationHolder {
+      width: 100%;
+      margin-bottom: 20px;
+  }
+
+  #video {
+      width: 100%;
+      height: auto;
+  }
+
+  #videoCall {
+      width: 100%;
+      height: 300px;
+  }
+
+  #initialTrainingHolder {
+      flex-direction: column;
+  }
+
+  #trainedCardsHolder {
+      grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* Media Query for Mobile Devices */
+@media (max-width: 768px) {
+  #titleBar h1 {
+      font-size: 18px;
+  }
+
+  #status-text {
+      font-size: 14px;
+  }
+
+  #translatorWindow {
+      flex-direction: column;
+      align-items: center;
+  }
+
+  #videoHolder, #trainingHolder, #translationHolder {
+      width: 90%;
+      margin-bottom: 15px;
+  }
+
+  #video {
+      width: 100%;
+      height: auto;
+  }
+
+  #videoCall {
+      width: 100%;
+      height: 250px;
+  }
+
+  #initialTrainingHolder {
+      flex-direction: column;
+  }
+
+  #trainedCardsHolder {
+      grid-template-columns: 1fr;
+  }
+}
+
+/* Media Query for Small Mobile Devices */
+@media (max-width: 480px) {
+  #titleBar h1 {
+      font-size: 16px;
+  }
+
+  #status-text {
+      font-size: 12px;
+  }
+
+  #translatorWindow {
+      flex-direction: column;
+      align-items: center;
+  }
+
+  #videoHolder, #trainingHolder, #translationHolder {
+      width: 100%;
+  }
+
+  #video {
+      width: 100%;
+      height: auto;
+  }
+
+  #videoCall {
+      width: 100%;
+      height: 200px;
+  }
+
+  #initialTrainingHolder {
+      flex-direction: column;
+  }
+
+  #trainedCardsHolder {
+      grid-template-columns: 1fr;
+  }
 }
